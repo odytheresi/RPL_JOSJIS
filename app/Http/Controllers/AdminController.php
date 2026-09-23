@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\role;
+use App\Models\admin;
 use Illuminate\Http\Request;
 
-class RoleController extends Controller
+class AdminController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +34,7 @@ class RoleController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(role $role)
+    public function show(admin $admin)
     {
         //
     }
@@ -42,7 +42,7 @@ class RoleController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(role $role)
+    public function edit(admin $admin)
     {
         //
     }
@@ -50,7 +50,7 @@ class RoleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, role $role)
+    public function update(Request $request, admin $admin)
     {
         //
     }
@@ -58,7 +58,7 @@ class RoleController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(role $role)
+    public function destroy(admin $admin)
     {
         //
     }

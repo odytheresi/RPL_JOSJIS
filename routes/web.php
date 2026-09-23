@@ -1,23 +1,45 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\OperatorController;
+use App\Http\Controllers\ChargingStationController;
+use App\Http\Controllers\ChargerController;
+use App\Http\Controllers\TarifController;
+use App\Http\Controllers\TipeKonektorController;
 
-Route::get('/', function () {
-    return redirect('/login');
+Route::prefix('operator')->name('operator.')->group(function () {
+
+    
+    Route::get('/dashboard', [
+        OperatorController::class,
+        'index'
+    ])->name('dashboard');
+
+
+    
+    Route::resource(
+        'station',
+        ChargingStationController::class
+    );
+
+
+    
+    Route::resource(
+        'charger',
+        ChargerController::class
+    );
+
+
+    
+    Route::resource(
+        'tarif',
+        TarifController::class
+    );
+
+
+    
+    Route::resource(
+        'konektor',
+        TipeKonektorController::class
+    );
 });
 
-// Halaman login
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
-
-// Logout
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-// Halaman Dashboard yang dijaga session manual
-Route::get('/dashboard', function () {
-    if (!session()->has('user_id')) {
-        return redirect('/login');
-    }
-    return view('dashboard');
-});
