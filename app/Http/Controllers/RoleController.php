@@ -7,20 +7,17 @@ use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
-   
     public function index()
     {
         $roles = Role::withCount('logins')->get();
         return view('role.index', compact('roles'));
     }
 
-   
     public function create()
     {
         return view('role.create');
     }
 
-  
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -29,25 +26,21 @@ class RoleController extends Controller
 
         Role::create($validated);
 
-        return redirect()->route('role.index')->
-            with('success', 'Role berhasil ditambahkan.');
-    
+        return redirect()->route('role.index')
+            ->with('success', 'Role berhasil ditambahkan.');
     }
 
-    
     public function show(Role $role)
     {
         $role->load('users');
         return view('role.show', compact('role'));
     }
 
-    
     public function edit(Role $role)
     {
         return view('role.edit', compact('role'));
     }
 
-   
     public function update(Request $request, Role $role)
     {
         $validated = $request->validate([
@@ -60,7 +53,6 @@ class RoleController extends Controller
             ->with('success', 'Role berhasil diupdate.');
     }
 
-    
     public function destroy(Role $role)
     {
         if ($role->users()->exists()) {
@@ -73,5 +65,4 @@ class RoleController extends Controller
         return redirect()->route('role.index')
             ->with('success', 'Role berhasil dihapus.');
     }
-    
 }
