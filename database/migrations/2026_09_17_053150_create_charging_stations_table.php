@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('charging_station', function (Blueprint $table) {
             $table->increments('id_station');
-            $table->integer('id_operator');
+            $table->unsignedInteger('id_operator');
             $table->string('nama_st', 100);
             $table->text('alamat');
             $table->decimal('latitude', 10, 7)->nullable();

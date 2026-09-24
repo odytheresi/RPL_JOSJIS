@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('sesi_charger', function (Blueprint $table) {
            $table->increments('id_sesi');
 
-            $table->integer('user_id');
-            $table->integer('id_charger');
-            $table->integer('id_kendaraan');
-            $table->integer('id_tarif');
+            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('id_charger');
+            $table->unsignedInteger('id_kendaraan');
+            $table->unsignedInteger('id_tarif');
 
             $table->dateTime('wkt_mulai');
             $table->dateTime('wkt_selesai')->nullable();
@@ -42,7 +42,7 @@ return new class extends Migration
 
             $table->foreign('id_kendaraan')
                 ->references('id_kendaraan')
-                ->on('kendaraan');
+                ->on('kendaraans');
 
             $table->foreign('id_tarif')
                 ->references('id_tarif')
@@ -56,6 +56,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sesi_chargers');
+        Schema::dropIfExists('sesi_charger');
     }
 };

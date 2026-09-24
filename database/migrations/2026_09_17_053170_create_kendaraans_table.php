@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('kendaraans', function (Blueprint $table) {
             $table->increments('id_kendaraan')->primary();
-            $table->integer('user_id');
+            $table->unsignedInteger('user_id');
             $table->string('no_plat', 15)->unique();
             $table->string('merk', 50);
             $table->string('model', 50);

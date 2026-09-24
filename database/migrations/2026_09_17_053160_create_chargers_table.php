@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('charger', function (Blueprint $table) {
              $table->increments('id_charger');
-            $table->integer('id_station');
-            $table->integer('id_konektor');
+            $table->unsignedInteger('id_station');
+            $table->unsignedInteger('id_konektor');
             $table->string('kd_charger', 100);
             $table->decimal('daya_maks', 8, 2);
             $table->enum('status', [
@@ -38,6 +38,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('chargers');
+        Schema::dropIfExists('charger');
     }
 };

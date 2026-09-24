@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('tarif', function (Blueprint $table) {
             $table->increments('id_tarif');
-            $table->integer('id_station');
+            $table->unsignedInteger('id_station');
             $table->decimal('harga_per_kwh', 12, 2)->default(2500.00);
             $table->dateTime('berlaku_mulai');
             $table->enum('status', [
@@ -23,7 +23,7 @@ return new class extends Migration
 
             $table->foreign('id_station')
                   ->references('id_station')
-                  ->on('station');
+                  ->on('charging_station');
         });
     }
 
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tarifs');
+        Schema::dropIfExists('tarif');
     }
 };

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('transaksi', function (Blueprint $table) {
             $table->increments('id_transaksi');
 
-            $table->integer('id_sesi')->unique();
+            $table->unsignedInteger('id_sesi')->unique();
             $table->string('mtd_bayar', 50);
             $table->decimal('jumlah', 12, 2);
 
@@ -29,8 +29,8 @@ return new class extends Migration
 
             $table->foreign('id_sesi')
                 ->references('id_sesi')
-                ->on('sesi_charge');
-                });
+                ->on('sesi_charger');
+        });
         
     }
 
@@ -39,6 +39,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('transaksis');
+        Schema::dropIfExists('transaksi');
     }
 };

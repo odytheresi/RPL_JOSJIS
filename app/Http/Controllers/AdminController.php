@@ -2,64 +2,128 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\admin;
+use App\Models\Admin;
+use App\Models\Role;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Dashboard Admin
+     */
+    public function dashboard()
+    {
+        $jumlahAdmin = Admin::count();
+        $jumlahRole = Role::count();
+
+        return view('admin.dashboard', compact(
+            'jumlahAdmin',
+            'jumlahRole'
+        ));
+    }
+
+    /**
+     * Menampilkan daftar akun Admin
      */
     public function index()
     {
-        //
+        $admins = Admin::with('role')->get();
+
+        return view('admin.akun.index', compact('admins'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Menampilkan form tambah Admin
      */
     public function create()
     {
-        //
+        $roles = Role::all();
+
+        return view('admin.akun.create', compact('roles'));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Menyimpan Admin baru
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'id_role' => 'required|exists:role,id_role',
+            'nma_admin' => 'required|string|max:100',
+            'email' => 'required|email|max:100|unique:admin,email',
+            'pass' => 'required|string|min:8',
+        ]);
+
+        Admin::create([
+            'id_role' => $validated['id_role'],
+            'nma_admin' => $validated['nma_admin'],
+            'email' => $validated['email'],
+            'pass' => Hash::make($validated['pass']),
+        ]);
+
+        return redirect()
+            ->route('admin.akun.index')
+            ->with('success', 'Akun Admin berhasil ditambahkan.');
     }
 
     /**
-     * Display the specified resource.
+     * Menampilkan form edit Admin
      */
-    public function show(admin $admin)
+    public function edit($id)
     {
-        //
+        $admin = Admin::findOrFail($id);
+        $roles = Role::all();
+
+        return view('admin.akun.edit', compact(
+            'admin',
+            'roles'
+        ));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Mengupdate data Admin
      */
-    public function edit(admin $admin)
+    public function update(Request $request, $id)
     {
-        //
+        $admin = Admin::findOrFail($id);
+
+        $validated = $request->validate([
+            'id_role' => 'required|exists:role,id_role',
+            'nma_admin' => 'required|string|max:100',
+            'email' => 'required|email|max:100|unique:admin,email,' . $id . ',id_admin',
+            'pass' => 'nullable|string|min:8',
+        ]);
+
+        $data = [
+            'id_role' => $validated['id_role'],
+            'nma_admin' => $validated['nma_admin'],
+            'email' => $validated['email'],
+        ];
+
+        // Password hanya diubah jika diisi
+        if (!empty($validated['pass'])) {
+            $data['pass'] = Hash::make($validated['pass']);
+        }
+
+        $admin->update($data);
+
+        return redirect()
+            ->route('admin.akun.index')
+            ->with('success', 'Data Admin berhasil diperbarui.');
     }
 
     /**
-     * Update the specified resource in storage.
+     * Menghapus akun Admin
      */
-    public function update(Request $request, admin $admin)
+    public function destroy($id)
     {
-        //
-    }
+        $admin = Admin::findOrFail($id);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(admin $admin)
-    {
-        //
+        $admin->delete();
+
+        return redirect()
+            ->route('admin.akun.index')
+            ->with('success', 'Akun Admin berhasil dihapus.');
     }
 }

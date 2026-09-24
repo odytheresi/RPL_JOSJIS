@@ -8,58 +8,83 @@ use Illuminate\Http\Request;
 class KonfigSistemController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Menampilkan daftar konfigurasi sistem
      */
     public function index()
     {
-        //
+        $konfigs = KonfigSistem::orderBy('nm_konfig')->get();
+
+        return view('admin.konfigurasi.index', compact('konfigs'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Menampilkan form tambah konfigurasi
      */
     public function create()
     {
-        //
+        return view('admin.konfigurasi.create');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Menyimpan konfigurasi baru
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'id_konfig' => 'required|integer|unique:konfig_sistem,id_konfig',
+            'nm_konfig' => 'required|string|max:100',
+            'nilai' => 'required|string',
+            'deskripsi' => 'nullable|string',
+        ]);
+
+        KonfigSistem::create($validated);
+
+        return redirect()
+            ->route('admin.konfigurasi.index')
+            ->with('success', 'Konfigurasi berhasil ditambahkan.');
     }
 
     /**
-     * Display the specified resource.
+     * Menampilkan form edit konfigurasi
      */
-    public function show(KonfigSistem $konfigSistem)
+    public function edit($id)
     {
-        //
+        $konfig = KonfigSistem::findOrFail($id);
+
+        return view('admin.konfigurasi.edit', compact('konfig'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Mengupdate konfigurasi
      */
-    public function edit(KonfigSistem $konfigSistem)
+    public function update(Request $request, $id)
     {
-        //
+        $konfig = KonfigSistem::findOrFail($id);
+
+        $validated = $request->validate([
+            'nm_konfig' => 'required|string|max:100',
+            'nilai' => 'required|string',
+            'deskripsi' => 'nullable|string',
+        ]);
+
+        $konfig->update($validated);
+
+        return redirect()
+            ->route('admin.konfigurasi.index')
+            ->with('success', 'Konfigurasi berhasil diperbarui.');
     }
 
     /**
-     * Update the specified resource in storage.
+     * Menghapus konfigurasi
      */
-    public function update(Request $request, KonfigSistem $konfigSistem)
+    public function destroy($id)
     {
-        //
-    }
+        $konfig = KonfigSistem::findOrFail($id);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(KonfigSistem $konfigSistem)
-    {
-        //
+        $konfig->delete();
+
+        return redirect()
+            ->route('admin.konfigurasi.index')
+            ->with('success', 'Konfigurasi berhasil dihapus.');
     }
 }
